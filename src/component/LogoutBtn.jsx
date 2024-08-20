@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../store/authSlice";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {  FaSignOutAlt } from 'react-icons/fa';
+import { FaSignOutAlt } from "react-icons/fa";
 function LogoutBtn() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
@@ -26,7 +26,6 @@ function LogoutBtn() {
 
       // Navigate to the login page or home after logging out
       navigate("/login"); // Change the path as needed
-
     } catch (err) {
       console.error("Logout failed:", err);
       setError("Failed to logout. Please try again.");
@@ -58,8 +57,8 @@ function LogoutBtn() {
           </svg>
         ) : (
           <div>
-          <FaSignOutAlt />
-          <span>Logout</span>
+            <FaSignOutAlt />
+            <span>Logout</span>
           </div>
         )}
       </button>

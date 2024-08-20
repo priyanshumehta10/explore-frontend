@@ -5,7 +5,6 @@ import { useForm } from "react-hook-form";
 import axios from "axios"; // Axios for making HTTP requests
 import { login } from "../store/authSlice";
 
-
 function Login() {
   const dispatch = useDispatch();
   const {
@@ -71,14 +70,6 @@ function Login() {
                 placeholder="Enter your username or email"
                 {...register("usernameOrEmail", {
                   required: "Username or Email is required",
-                  validate: (value) => {
-                    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-                    const isUsername = /^[a-zA-Z0-9_.-]+$/.test(value);
-                    if (!isEmail && !isUsername) {
-                      return "Please enter a valid email or username";
-                    }
-                    return true;
-                  },
                 })}
               />
               {errors.usernameOrEmail && (
