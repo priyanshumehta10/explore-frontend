@@ -1,11 +1,12 @@
 import React from 'react'
 import AddOpinionHome from './AddOpinionHome'
-import VideoCart from './VideoCart'
+import Videos from './Videos'
+
 const Home = () => {
   return (
     <div>
       <AddOpinionHome/>
-      <VideoCart/>  
+      <Videos/>
     </div>
   )
 }
