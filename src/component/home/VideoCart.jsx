@@ -8,7 +8,7 @@ const VideoCart = ({ videos }) => {
       {videos.map((video) => (
         <div key={video._id} className="bg-white rounded-lg p-4">
           {/* Thumbnail Image with Border and Lazy Loading */}
-          <div className="mb-2 border-2 border-zinc-600 rounded-2xl overflow-hidden">
+          <div className="mb-1 border-2 border-zinc-600 rounded-2xl overflow-hidden">
             <img
               src={video.thumbnail}
               alt={video.title}
@@ -40,11 +40,11 @@ const VideoCart = ({ videos }) => {
             </div>
           </div>
           {/* Channel Name */}
-          <p className="text-gray-600  pl-11">{video.username}</p>
+          <p className="text-gray-600  pl-12">{video.username}</p>
           {/* Views and Time since upload in one line */}
-          <div className="text-sm pl-11 text-gray-500 flex justify-between">
+          <div className="text-sm pl-12 text-gray-500 flex justify-between">
             <p>{video.views} views</p>
-            <p>|{moment(video.createdAt).fromNow()}</p>
+            <p>|  {moment(video.createdAt).fromNow()}</p>
           </div>
         </div>
       ))}

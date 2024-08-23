@@ -25,6 +25,9 @@ const AddOpinionHome = () => {
         { withCredentials: true }
       );
       const tweet = response.data.data;
+      console.log(response);
+      
+      dispatch(addTweet())
 
       if (tweet) {
         dispatch(addTweet(tweet)); // Dispatch the action to add the tweet to the store
