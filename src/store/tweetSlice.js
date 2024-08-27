@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     tweets: [], // Array to hold tweets
     status: false, // Status to indicate if tweets are loaded
-    error: null // Error message if any operation fails
 };
 
 const tweetSlice = createSlice({
@@ -24,18 +23,16 @@ const tweetSlice = createSlice({
             }
         },
         deleteTweet: (state, action) => {
-            state.tweets = state.tweets.filter(tweet => tweet._id !== action.payload); // Remove a tweet by its ID
+            state.tweets = state.tweets.filter(tweet => tweet._id !== action.payload);  // Remove the tweet with the matching ID
         },
+        
         clearTweets: (state) => {
             state.tweets = []; // Clear all tweets
             state.status = false; // Reset the status to false
-        },
-        setError: (state, action) => {
-            state.error = action.payload; // Set an error message
         }
     }
 });
 
-export const { setTweets, addTweet, updateTweet, deleteTweet, clearTweets, setError } = tweetSlice.actions;
+export const { setTweets, addTweet, updateTweet, deleteTweet, clearTweets, toggleLike } = tweetSlice.actions;
 
 export default tweetSlice.reducer;

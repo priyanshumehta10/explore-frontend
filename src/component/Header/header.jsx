@@ -1,26 +1,26 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import MainLogo from '../MainLogo';
 import { FaTimes, FaUpload, FaComments, FaFire, FaUser, FaSignOutAlt } from 'react-icons/fa';
 import LogoutBtn from '../LogoutBtn';
 
 const Header = () => {
-  const [activeNav, setActiveNav] = useState('');
-  const [isUploadActive, setIsUploadActive] = useState(false); // State to track upload button click
-
-  const handleNavClick = (section) => {
-    setActiveNav(section);
-  };
+  const [isUploadActive, setIsUploadActive] = useState(false);
+  const location = useLocation();
 
   const handleUploadClick = () => {
-    setIsUploadActive(!isUploadActive); // Toggle the active state
+    setIsUploadActive(!isUploadActive);
   };
 
   return (
-    <div className='px-4 py-3 bg-[#E9E6F3]'>
+    <div className='sticky top-0 z-50'>
+      {/* Main Header */}
       <header className="bg-[#CDC4E3] flex items-center justify-between p-3 mx-auto max-w-6xl" style={{ borderRadius: '20px', height: '60px' }}>
         {/* Logo Section */}
         <div className="flex items-center hover:font-bold px-2">
-          <MainLogo width='30px' header="true" />
+          <Link to="/" className="flex items-center">
+            <MainLogo width='30px' header="true" />
+          </Link>
         </div>
 
         {/* Search Bar */}
@@ -37,27 +37,24 @@ const Header = () => {
         {/* Desktop Navigation and Buttons */}
         <div className="hidden md:flex items-center space-x-4 ml-auto">
           <nav className="flex space-x-4 text-sm px-4">
-            <a
-              href="#opinion"
-              className={`px-3 py-1 flex items-center rounded-md hover:scale-105 transform transition-transform duration-200 hover:shadow-md ${activeNav === 'opinion' ? 'bg-white' : ''}`}
-              onClick={() => handleNavClick('opinion')}
+            <Link
+              to="/opinion"
+              className={`px-3 py-1 flex items-center rounded-md hover:scale-105 transform transition-transform duration-200 hover:shadow-md ${location.pathname === '/opinion' ? 'bg-white' : ''}`}
             >
               <FaComments className="mr-1" /> Opinion
-            </a>
-            <a
-              href="#trending"
-              className={`px-3 py-1 flex items-center rounded-md hover:scale-105 transform transition-transform duration-200 hover:shadow-md ${activeNav === 'trending' ? 'bg-white' : ''}`}
-              onClick={() => handleNavClick('trending')}
+            </Link>
+            <Link
+              to="/trending"
+              className={`px-3 py-1 flex items-center rounded-md hover:scale-105 transform transition-transform duration-200 hover:shadow-md ${location.pathname === '/trending' ? 'bg-white' : ''}`}
             >
               <FaFire className="mr-1" /> Trending
-            </a>
-            <a
-              href="#me"
-              className={`px-3 py-1 flex items-center rounded-md hover:scale-105 transform transition-transform duration-200 hover:shadow-md ${activeNav === 'me' ? 'bg-white' : ''}`}
-              onClick={() => handleNavClick('me')}
+            </Link>
+            <Link
+              to="/me"
+              className={`px-3 py-1 flex items-center rounded-md hover:scale-105 transform transition-transform duration-200 hover:shadow-md ${location.pathname === '/me' ? 'bg-white' : ''}`}
             >
               <FaUser className="mr-1" /> Me
-            </a>
+            </Link>
           </nav>
 
           {/* Upload Button */}
@@ -75,30 +72,27 @@ const Header = () => {
         </div>
       </header>
 
-      {/* Always Visible Bottom Bar */}
-      <div className="fixed inset-x-0 bottom-0 bg-[#CDC4E3] flex items-center justify-between p-3 md:hidden" style={{ height: '50px', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: '0 -1px 5px rgba(0, 0, 0, 0.1)' }}>
+      {/* Fixed Bottom Bar */}
+      <div className="fixed inset-x-0 bottom-0 bg-[#E9E6F3] flex items-center justify-between p-3 md:hidden" style={{ height: '50px', borderTopLeftRadius: '20px', borderTopRightRadius: '20px', boxShadow: '0 -1px 5px rgba(0, 0, 0, 0.1)' }}>
         <nav className="flex items-center space-x-4 flex-grow">
-          <a
-            href="#opinion"
-            className={`px-2 py-1 flex items-center rounded-md ${activeNav === 'opinion' ? 'bg-white' : ''}`}
-            onClick={() => handleNavClick('opinion')}
+          <Link
+            to="/opinion"
+            className={`px-2 py-1 flex items-center rounded-md ${location.pathname === '/opinion' ? 'bg-white' : ''}`}
           >
             <FaComments className="mr-1" />
-          </a>
-          <a
-            href="#trending"
-            className={`px-2 py-1 flex items-center rounded-md ${activeNav === 'trending' ? 'bg-white' : ''}`}
-            onClick={() => handleNavClick('trending')}
+          </Link>
+          <Link
+            to="/trending"
+            className={`px-2 py-1 flex items-center rounded-md ${location.pathname === '/trending' ? 'bg-white' : ''}`}
           >
             <FaFire className="mr-1" />
-          </a>
-          <a
-            href="#me"
-            className={`px-2 py-1 flex items-center rounded-md ${activeNav === 'me' ? 'bg-white' : ''}`}
-            onClick={() => handleNavClick('me')}
+          </Link>
+          <Link
+            to="/me"
+            className={`px-2 py-1 flex items-center rounded-md ${location.pathname === '/me' ? 'bg-white' : ''}`}
           >
             <FaUser className="mr-1" />
-          </a>
+          </Link>
         </nav>
 
         {/* Upload Button */}
@@ -113,7 +107,7 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Log Out Button with Icon */}
+        {/* Log Out Button */}
         <button className="px-2 py-1 text-xs rounded-md flex items-center space-x-1 bg-[#fc1a1a] text-white">
           <FaSignOutAlt />
         </button>

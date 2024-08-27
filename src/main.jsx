@@ -9,6 +9,9 @@ import HomePage from './pages/HomePage.jsx';
 import { AuthLayout } from './component/index.js';
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
+import OpinionPage from './pages/OpinionPage.jsx';
+import TrandingPage from './pages/TrendingPage.jsx';
+import OneVideo from './component/Video/OneVideo.jsx';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +33,30 @@ const router = createBrowserRouter([
         element:(
           <AuthLayout authentication={false}>
             <SignupPage/>
+          </AuthLayout>
+
+        )
+      },{
+        path:"/opinion",
+        element:(
+          <AuthLayout authentication>
+            <OpinionPage/>
+          </AuthLayout>
+
+        )
+      },{
+        path:"/trending",
+        element:(
+          <AuthLayout authentication>
+            <TrandingPage/>
+          </AuthLayout>
+
+        )
+      },{
+        path:"/:videoId",
+        element:(
+          <AuthLayout authentication>
+            <OneVideo/>
           </AuthLayout>
 
         )

@@ -1,48 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
 import backgroundTweet from "../../assets/backgroundTweet.png";
-import axios from "axios";
-import { removeTopTweets, addTopTweets } from "../../store/topTweetSlice";
 import tweet from "../../assets/tweet.png";
 import moment from "moment";
 
-const ViralOpinions = () => {
-  const [loading, setLoading] = useState(true);
-  const [openion, setOpenion] = useState([]);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    const fetchCurrentOpenions = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8000/api/v1/likes/topLiked",
-          { withCredentials: true }
-        );
-        const userData = response.data.data;
-        setOpenion(userData);
-
-        if (userData) {
-          dispatch(addTopTweets(userData));
-        } else {
-          dispatch(removeTopTweets());
-        }
-      } catch (error) {
-        console.error("Error fetching current user:", error);
-        dispatch(removeTopTweets());
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCurrentOpenions();
-  }, [dispatch]);
-
+const ViralOpinions = ({openion}) => {
   return (
     <div
       className="bg-[#E9E6F3] flex flex-col items-center p-4 lg:p-4"
       style={{ minHeight: "45vh" }}
     >
-      <div className="flex items-center mb-3 mr-auto">
+      {/* Header Section */}
+      <div className="flex items-center mb-5 mr-auto">
         <div
           className="rounded-full"
           style={{
@@ -55,7 +23,7 @@ const ViralOpinions = () => {
           <img
             src={tweet}
             alt="Logo"
-            style={{ width: "100%", height: "100%" }}
+            className="w-full h-full"
           />
         </div>
         <h2
@@ -69,17 +37,18 @@ const ViralOpinions = () => {
           Some Viral Opinions....
         </h2>
       </div>
-      <div className="w-full flex justify-center space-x-4">
+
+      {/* Opinions Section */}
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {openion.length > 0 ? (
           openion.slice(0, 3).map((opinion) => (
             <div
               key={opinion.tweetId}
-              className="bg-white bg-opacity-100 border p-4 rounded-2xl flex-shrink-2"
+              className="bg-white bg-opacity-5 border p-4 rounded-2xl"
               style={{
                 backgroundImage: `url(${backgroundTweet})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                width: "300px",
                 border: "3px solid #9E8DC9",
               }}
             >
@@ -87,7 +56,7 @@ const ViralOpinions = () => {
                 <img
                   src={opinion.avatar}
                   alt="User Avatar"
-                  className="rounded-full"
+                  className="rounded-full border-slate-950 border"
                   style={{ width: "40px", height: "40px", marginRight: "10px" }}
                 />
                 <div className="flex flex-col w-full">
@@ -102,16 +71,21 @@ const ViralOpinions = () => {
                   </p>
                 </div>
               </div>
-              <p className="text-sm mb-4 line-clamp-2" style={{
-            fontFamily: "Moderustic",
-            fontOpticalSizing: "auto",
-  fontWeight: 500,
-  fontStyle: "normal",
-          }}>{opinion.content}</p>
+              <p
+                className="text-sm mb-4 line-clamp-2 bg-[#E9E6F3]"
+                style={{
+                  fontFamily: "Moderustic",
+                  fontOpticalSizing: "auto",
+                  fontWeight: 500,
+                  fontStyle: "normal",
+                }}
+              >
+                {opinion.content}
+              </p>
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500">No viral opinions yet.</p>
+          <p className="text-center text-gray-500 col-span-full">No viral opinions yet.</p>
         )}
       </div>
     </div>

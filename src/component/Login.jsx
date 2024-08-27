@@ -44,7 +44,6 @@ function Login() {
       // localStorage.setItem("refreshToken", refreshToken);
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
-      console.log(err);
     }
   };
 

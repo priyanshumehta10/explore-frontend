@@ -25,13 +25,10 @@ const AddOpinionHome = () => {
         { withCredentials: true }
       );
       const tweet = response.data.data;
-      console.log(response);
-      
-      dispatch(addTweet())
 
       if (tweet) {
         dispatch(addTweet(tweet)); // Dispatch the action to add the tweet to the store
-        reset(); // Clear the form field
+        reset({ content: "" })
       }
     } catch (error) {
       setError("Failed to post the tweet. Please try again.");
@@ -44,9 +41,10 @@ const AddOpinionHome = () => {
   return (
     <div
       className="bg-[#E9E6F3] flex flex-col lg:flex-row items-center p-4 lg:p-6"
-      style={{ minHeight: "45vh" }}
+      style={{ minHeight: "30vh" }}
     >
-      <div className="flex-shrink-0 mb-4 lg:mb-0 lg:mr-6">
+      {/* Display logo and text for large screens only */}
+      <div className="flex-shrink-0 mb-4 lg:mb-0 lg:mr-6 hidden lg:block">
         <div
           className="bg-cover bg-center rounded-full"
           style={{
@@ -67,29 +65,49 @@ const AddOpinionHome = () => {
             backgroundPosition: "center",
           }}
         >
-          <div className="flex flex-col items-center mb-4 lg:mb-0 lg:mr-4">
+          <div className="flex items-center mb-4 lg:mb-0 lg:mr-4">
+            {/* Avatar Section */}
             <div
-              className="rounded-full p-1"
+              className="rounded-full p-1 flex flex-col items-center justify-center"
               style={{
-                width: "90px",
+                width: "95px",
                 height: "90px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
               }}
             >
               <img
                 src={user ? user.avatar : tweet}
                 alt="avatar"
                 className="rounded-full"
-                style={{ width: "80px", height: "80px" }}
+                style={{ width: "80px", height: "75px" }}
               />
+              <div className="mt-2 text-center hidden lg:flex">
+                {" "}
+                {/* Add some margin-top to space the text */}
+                <p className="whitespace-nowrap overflow-hidden text-ellipsis">
+                  {" "}
+                  {user.fullName}
+                </p>
+              </div>
             </div>
-            <p className="mt-2 text-sm font-medium text-center">
-              {user ? user.fullName : "Full Name"}
-            </p>
-          </div>
 
+            {/* Text Section */}
+            <div className="ml-2">
+              <p className="text-sm font-medium text-center lg:hidden">
+                {user ? user.fullName : "Full Name"}
+              </p>
+              {/* "Announce Your Opinion" text, adjusted for small screens */}
+              <div
+                className="text-center text-xl font-semibold mt-2 lg:hidden"
+                style={{
+                  fontFamily: "Ribeye Marrow",
+                  fontWeight: 400,
+                  fontSize: "24px",
+                }}
+              >
+                ANNOUNCE YOUR OPINION
+              </div>
+            </div>
+          </div>
           <div
             className="flex-grow border-4 border-[#9E8DC9] p-4 rounded-2xl flex flex-col items-start lg:items-center"
             style={{ width: "100%", maxWidth: "400px" }}
@@ -98,7 +116,7 @@ const AddOpinionHome = () => {
               placeholder="Post your opinion here..."
               className="bg-[#E9E6F3] border-none outline-none w-full h-full p-2 resize-none overflow-auto"
               {...register("content", {
-                required: "content is required",
+                required: "Content is required",
               })}
               style={{
                 backgroundColor: "rgba(233, 230, 243, 0)",
@@ -121,8 +139,9 @@ const AddOpinionHome = () => {
         </div>
       </div>
 
+      {/* "Announce Your Opinion" on the side for large screens */}
       <div
-        className="flex-shrink-0 flex flex-col justify-center items-center text-center mt-4 lg:mt-0"
+        className="flex-shrink-0 flex-col justify-center items-center text-center mt-4 lg:mt-0 hidden lg:flex"
         style={{
           fontFamily: "Ribeye Marrow",
           fontWeight: 400,
