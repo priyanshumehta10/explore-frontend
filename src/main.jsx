@@ -12,6 +12,7 @@ import SignupPage from './pages/SignupPage.jsx';
 import OpinionPage from './pages/OpinionPage.jsx';
 import TrandingPage from './pages/TrendingPage.jsx';
 import OneVideo from './component/Video/OneVideo.jsx';
+import UploadPage from './pages/UploadPage.jsx';
 
 const router = createBrowserRouter([
   {
@@ -59,6 +60,13 @@ const router = createBrowserRouter([
             <OneVideo/>
           </AuthLayout>
 
+        )
+      },{
+        path:"/upload",
+        element:(
+          <AuthLayout authentication>
+            <UploadPage/>
+          </AuthLayout>
         )
       }
     ]

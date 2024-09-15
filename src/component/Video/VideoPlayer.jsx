@@ -10,14 +10,64 @@ const VideoPlayer = ({ videoDetails, loading }) => {
   const [share, setShare] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [subsNumber, setSubsNumber] = useState();
+  const [likeCount, setLikeCount] = useState(0);
 
-  const handleLike = () => {
-    setLiked(!liked);
+  const handleLike = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/api/v1/likes/toggle/v/${videoDetails._id}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      const status = response.data.message;
+      if (status === "Video liked successfully") {
+        setLiked(true);
+        setLikeCount((prev) => prev + 1);
+      } else if (status === "Video unliked successfully") {
+        setLiked(false);
+        setLikeCount((prev) => prev - 1);
+      }
+    } catch (error) {
+      console.error("Error Like/unLike:", error);
+    }
   };
+
   let userId = useSelector((state) => state.auth.userData);
-      userId = userId._id
-      console.log(userId);
-      
+  userId = userId._id;
+
+  useEffect(() => {
+    const likeCount = async () => {
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/likes/count/video/${videoDetails._id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      const isSub = response.data.data.likeCount;
+      setLikeCount(isSub);
+    };
+
+    likeCount();
+  }, [videoDetails.owner]);
+
+  useEffect(() => {
+    const checkIsLiked = async () => {
+      const response = await axios.get(
+        `http://localhost:8000/api/v1/likes/isLiked/v/${videoDetails._id}`,
+        {
+          withCredentials: true,
+        }
+      );
+      const isSub = response.data.data.isLiked;
+      setLiked(isSub);
+    };
+
+    checkIsLiked();
+  }, [videoDetails.owner]);
+
   useEffect(() => {
     const checkSubscription = async () => {
       const response = await axios.get(
@@ -27,7 +77,7 @@ const VideoPlayer = ({ videoDetails, loading }) => {
         }
       );
       const isSub = response.data.data;
-      
+
       const isUserSubscribed = await isSub.some(
         (sub) => sub.subscriberId === userId
       );
@@ -38,6 +88,27 @@ const VideoPlayer = ({ videoDetails, loading }) => {
     checkSubscription();
   }, [videoDetails.owner]);
 
+  useEffect(() => {
+    const checkSubscribersNumber = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/v1/subscriptions/c/${videoDetails.owner}`,
+          {
+            withCredentials: true,
+          }
+        );
+        const isSub = response.data.data;
+
+        // Count the number of elements in the isSub array
+        const subscribersCount = isSub.length;
+        setSubsNumber(subscribersCount);
+      } catch (error) {
+        console.error("Error fetching subscribers:", error);
+      }
+    };
+
+    checkSubscribersNumber();
+  }, [videoDetails.owner]);
 
   const handleSubscribe = async () => {
     try {
@@ -50,11 +121,13 @@ const VideoPlayer = ({ videoDetails, loading }) => {
       );
 
       const status = subscription.data.message;
-      
+
       if (status === "subscribed") {
         setSubscribed(true);
+        setSubsNumber((prev) => prev + 1);
       } else if (status === "unsubscribed") {
         setSubscribed(false);
+        setSubsNumber((prev) => prev - 1);
       }
     } catch (error) {
       console.error("Error subscribing/unsubscribing:", error);
@@ -66,7 +139,7 @@ const VideoPlayer = ({ videoDetails, loading }) => {
     setShare(!share);
     setTimeout(() => {
       setShare(false);
-    }, 1000); // 2000 milliseconds = 2 seconds
+    }, 1000); // 1000 milliseconds = 1 second
   };
 
   const toggleDescription = () => {
@@ -74,9 +147,19 @@ const VideoPlayer = ({ videoDetails, loading }) => {
   };
 
   if (loading) {
+    // Loading Skeleton Component
     return (
-      <div className="flex items-center justify-center h-screen w-full">
-        <img src={Ghost} alt="Loading..." className="w-32 h-32" />
+      <div className="p-4 space-y-4">
+        <div className="skeleton w-full h-60 md:h-96 rounded-lg"></div>
+        <div className="skeleton h-6 w-1/2 rounded"></div>
+        <div className="flex items-center space-x-4">
+          <div className="skeleton rounded-full h-12 w-12"></div>
+          <div className="flex-1 space-y-2">
+            <div className="skeleton h-4 w-3/4 rounded"></div>
+            <div className="skeleton h-4 w-1/2 rounded"></div>
+          </div>
+        </div>
+        <div className="skeleton h-20 w-full rounded"></div>
       </div>
     );
   }
@@ -117,7 +200,7 @@ const VideoPlayer = ({ videoDetails, loading }) => {
             <div className="text-gray-700 flex-grow">
               <p className="font-semibold text-xl">{videoDetails.username}</p>
               <p className="text-sm text-gray-500">
-                {videoDetails.subscriberCount} subscribers
+                {subsNumber} subscribers
               </p>
             </div>
             {/* Subscribe Button */}
@@ -134,7 +217,7 @@ const VideoPlayer = ({ videoDetails, loading }) => {
           </div>
         </div>
 
-        <div className="flex space-x-4 md:mb-4">
+        <div className="flex space-x-4 md:pl-3 mb-4">
           <div
             onClick={handleLike}
             className={`flex ${
@@ -148,7 +231,7 @@ const VideoPlayer = ({ videoDetails, loading }) => {
             >
               <FaHeart className="w-6 h-6" />
             </button>
-            <p className="flex-1 pl-5">32</p>
+            <p className="flex-1 pl-5">{likeCount}</p>
           </div>
           <div
             onClick={handleShare}
@@ -156,34 +239,35 @@ const VideoPlayer = ({ videoDetails, loading }) => {
               share ? "bg-cyan-200" : " bg-[#CDC4E3]"
             } p-2 m-0 px-5 rounded-se-3xl rounded-e-3xl`}
           >
-            <button className={`flex items-center space-x-2 ${
+            <button
+              className={`flex items-center space-x-2 ${
                 share ? "transform scale-125" : "transform scale-100"
-              } text-blue-600 hover:text-blue-800`}>
-              <FaShare className="w-6 h-6" />
-              <span>Share</span>
+              } transition-transform duration-200`}
+            >
+              <FaShare className="w-6 h-6 text-black" />
             </button>
           </div>
         </div>
 
         {/* Description */}
-        <p className="hidden md:block text-sm text-gray-500">
-          {videoDetails.views} views •{" "}
-          {new Date(videoDetails.createdAt).toDateString()}
-        </p>
-        <div className="text-gray-800 md:flex md:justify-between md:items-center">
-          <div>
-            <p>
-              {showFullDescription
-                ? videoDetails.description
-                : `${videoDetails.description.substring(0, 100)}...`}
-            </p>
-            <button
-              onClick={toggleDescription}
-              className="text-blue-600 hover:underline mt-2"
-            >
-              {showFullDescription ? "Show Less" : "Read More"}
-            </button>
+        <div className=" md:pl-3 md:mb-2 text-gray-800  bg-[#E9E6F3] hover:bg-[#E3DEE9] p-3 rounded-2xl" onClick={toggleDescription}>
+          <div className="flex-1  text-sm m-0  text-gray-500 ">
+            {videoDetails.views} views •{" "}
+            {new Date(videoDetails.createdAt).toDateString()}
           </div>
+          <div
+            className={`${
+              showFullDescription ? "line-clamp-none" : "line-clamp-2"
+            }`}
+          >
+            {videoDetails.description}
+          </div>
+          <button
+            className="text-blue-500"
+            onClick={toggleDescription}
+          >
+            {showFullDescription ? "Show Less" : "Show More"}
+          </button>
         </div>
       </div>
     </div>

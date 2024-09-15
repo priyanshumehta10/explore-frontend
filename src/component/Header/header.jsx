@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import MainLogo from '../MainLogo';
 import { FaTimes, FaUpload, FaComments, FaFire, FaUser, FaSignOutAlt } from 'react-icons/fa';
 import LogoutBtn from '../LogoutBtn';
@@ -7,9 +7,11 @@ import LogoutBtn from '../LogoutBtn';
 const Header = () => {
   const [isUploadActive, setIsUploadActive] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate(); // Use navigate to programmatically change routes
 
   const handleUploadClick = () => {
     setIsUploadActive(!isUploadActive);
+    navigate('/upload'); // Navigate to the /upload route
   };
 
   return (

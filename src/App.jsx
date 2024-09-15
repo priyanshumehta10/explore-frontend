@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login, logout } from './store/authSlice';
 import { Footer, Header } from './component/index';
 import { Outlet } from 'react-router-dom';
 import axios from 'axios';
-import Ghost from './assets/Ghost.gif'; // Adjust the path to where your GIF is stored
+import SkeletonFooter from './component/skeleton/SkeletonFooter';
+import SkeletonHeader from './component/skeleton/SkeletonHeader';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -36,9 +37,22 @@ function App() {
   return (
     <div className='min-h-screen flex flex-wrap bg-gray-100'>
       {loading ? (
-        <div className='flex items-center justify-center h-screen w-full'>
-          <img src={Ghost} alt="Loading..." className='w-32 h-32' />
-        </div>
+        <>
+          {/* Skeleton loaders for header and footer */}
+          <SkeletonHeader />
+          <main>
+            {/* Optional: Add skeleton loading content for the main section */}
+            <div className='flex flex-col items-center justify-center w-full p-4'>
+              {/* Example of main content skeletons */}
+              <div className='w-full max-w-md space-y-4'>
+                <div className='h-4 bg-gray-300 rounded w-3/4'></div>
+                <div className='h-4 bg-gray-300 rounded w-1/2'></div>
+                <div className='h-4 bg-gray-300 rounded w-full'></div>
+              </div>
+            </div>
+          </main>
+          <SkeletonFooter />
+        </>
       ) : (
         <div className='w-full'>
           <Header />

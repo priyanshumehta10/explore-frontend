@@ -5,7 +5,7 @@ import backgroundTweet from "../../assets/backgroundTweet.png";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { addTweet } from "../../store/tweetSlice"; // Ensure this is correctly imported
+import { addTweet } from "../../store/tweetSlice";
 
 const AddOpinionHome = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -27,8 +27,8 @@ const AddOpinionHome = () => {
       const tweet = response.data.data;
 
       if (tweet) {
-        dispatch(addTweet(tweet)); // Dispatch the action to add the tweet to the store
-        reset({ content: "" })
+        dispatch(addTweet(tweet));
+        reset({ content: "" });
       }
     } catch (error) {
       setError("Failed to post the tweet. Please try again.");
@@ -40,114 +40,93 @@ const AddOpinionHome = () => {
 
   return (
     <div
-      className="bg-[#E9E6F3] flex flex-col lg:flex-row items-center p-4 lg:p-6"
-      style={{ minHeight: "30vh" }}
+      className="bg-[#E9E6F3] p-6 lg:p-12 flex flex-col lg:flex-row items-center lg:justify-between"
+      style={{ minHeight: "35vh" }}
     >
-      {/* Display logo and text for large screens only */}
-      <div className="flex-shrink-0 mb-4 lg:mb-0 lg:mr-6 hidden lg:block">
+      {/* Logo Section for Large Screens */}
+      <div className="hidden lg:flex flex-col items-center mr-8">
         <div
           className="bg-cover bg-center rounded-full"
           style={{
-            width: "120px",
-            height: "115px",
+            width: "150px",
+            height: "145px",
             backgroundImage: `url(${tweet})`,
             backgroundSize: "cover",
           }}
         ></div>
       </div>
 
-      <div className="flex-grow flex flex-col lg:flex-row items-start lg:items-center w-full max-w-3xl lg:max-w-none">
+      {/* Main Content Section */}
+      <div className="flex-grow flex flex-col lg:flex-row items-center w-full max-w-5xl">
         <div
-          className="bg-[#E9E6F3] border border-[#9E8DC9] p-4 rounded-lg flex flex-col lg:flex-row items-start w-full lg:max-w-[650px] lg:items-center"
+          className="relative bg-[#E9E6F3] border border-[#9E8DC9] p-6 rounded-lg flex flex-col lg:flex-row items-start lg:items-center w-full"
           style={{
             backgroundImage: `url(${backgroundTweet})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
         >
-          <div className="flex items-center mb-4 lg:mb-0 lg:mr-4">
-            {/* Avatar Section */}
-            <div
-              className="rounded-full p-1 flex flex-col items-center justify-center"
-              style={{
-                width: "95px",
-                height: "90px",
-              }}
-            >
+          {/* Avatar and Text Section */}
+          <div className="flex items-center mb-4 lg:mb-0 lg:mr-6">
+            {/* Avatar */}
+            <div className="rounded-full p-1 flex flex-col items-center justify-center">
               <img
                 src={user ? user.avatar : tweet}
                 alt="avatar"
-                className="rounded-full"
-                style={{ width: "80px", height: "75px" }}
+                className="rounded-full w-24 h-24"
               />
-              <div className="mt-2 text-center hidden lg:flex">
-                {" "}
-                {/* Add some margin-top to space the text */}
-                <p className="whitespace-nowrap overflow-hidden text-ellipsis">
-                  {" "}
-                  {user.fullName}
-                </p>
-              </div>
+              <p className="mt-2 hidden lg:block text-center whitespace-nowrap overflow-hidden text-ellipsis text-lg">
+                {user?.fullName}
+              </p>
             </div>
 
-            {/* Text Section */}
-            <div className="ml-2">
-              <p className="text-sm font-medium text-center lg:hidden">
-                {user ? user.fullName : "Full Name"}
-              </p>
-              {/* "Announce Your Opinion" text, adjusted for small screens */}
+            {/* Text Section for Small Screens */}
+            <div className="ml-2 lg:hidden">
+              <p className="text-sm font-medium text-center">{user ? user.fullName : "Full Name"}</p>
               <div
-                className="text-center text-xl font-semibold mt-2 lg:hidden"
+                className="text-center font-bold mt-2"
                 style={{
                   fontFamily: "Ribeye Marrow",
                   fontWeight: 400,
-                  fontSize: "24px",
+                  fontSize: "42px",
                 }}
               >
                 ANNOUNCE YOUR OPINION
               </div>
             </div>
           </div>
-          <div
-            className="flex-grow border-4 border-[#9E8DC9] p-4 rounded-2xl flex flex-col items-start lg:items-center"
-            style={{ width: "100%", maxWidth: "400px" }}
-          >
+
+          {/* Textarea and Button */}
+          <div className="flex-grow lg:max-w-[500px] w-full"> {/* Increased max width */}
             <textarea
               placeholder="Post your opinion here..."
-              className="bg-[#E9E6F3] border-none outline-none w-full h-full p-2 resize-none overflow-auto"
+              className="w-full h-40 p-3 bg-transparent border-none outline-none resize-none overflow-auto"
               {...register("content", {
                 required: "Content is required",
               })}
-              style={{
-                backgroundColor: "rgba(233, 230, 243, 0)",
-                fontFamily: "inherit",
-                fontSize: "inherit",
-                height: "100%",
-              }}
+              style={{ fontFamily: "inherit", fontSize: "18px" }}
             />
           </div>
 
           <button
             onClick={handleSubmit(handleButtonClick)}
-            className={`text-white p-2 m-3 rounded-lg flex items-center justify-center mt-4 lg:mt-0 transition-colors duration-300 ${
-              isClicked ? "bg-[#5A4B9F]" : "bg-[#3777ee]"
+            className={`text-white p-4 ml-auto rounded-lg flex items-center  justify-center transition-colors duration-300 text-xl ${ // Increased padding and font size
+              isClicked ? "bg-[#5A4B9F]" : "bg-[#3777ee]" 
             }`}
             disabled={isClicked}
           >
-            <FaPaperPlane />
+            <FaPaperPlane size={24} /> {/* Increased icon size */}
           </button>
         </div>
       </div>
 
-      {/* "Announce Your Opinion" on the side for large screens */}
+      {/* "Announce Your Opinion" for Large Screens */}
       <div
-        className="flex-shrink-0 flex-col justify-center items-center text-center mt-4 lg:mt-0 hidden lg:flex"
+        className="hidden lg:flex flex-col items-center text-center mt-4 lg:mt-0"
         style={{
           fontFamily: "Ribeye Marrow",
           fontWeight: 400,
-          fontSize: "24px",
-          width: "100%",
-          maxWidth: "200px",
+          fontSize: "30px",
         }}
       >
         <div>ANNOUNCE</div>
